@@ -1,0 +1,565 @@
+body, html {
+    height: 100%;
+    margin: 0;
+    background-color: #1a2a3a!important;
+    
+    color: white;
+}
+
+.chat {
+    margin-top: 1%;
+    margin-bottom: auto;
+    width: 85%;  /* Decrease the width (optional) */
+    max-width: 100vw;  /* Ensures no overflow */
+    height: 75vh;  /* Height remains the same */
+    margin-left: 2%;  /* Reduced margin-left to position the card more to the left */
+    margin-right: 50%;  /* Adjust margin-right if necessary */
+}
+
+
+.card {
+    height: 100%;  /* Card takes up full height of the chat container */
+    border-radius: 15px !important;
+    background-color: rgba(0, 0, 0, 0.4) !important;
+    width: 100%;  /* Ensure card takes up full width of the container */
+    margin-top: 0
+  
+}
+
+.container-fluid.h-100 .row {
+    display: flex;
+    justify-content: space-between;  /* Space between the chat and notes box */
+    align-items: stretch;  /* Align both elements at the top */
+    height: 100%;  /* Ensure the row takes full height */
+    
+}
+
+.contacts_body {
+    padding: 0.75rem 0 !important;
+   
+    white-space: nowrap;
+}
+
+
+.card-header {
+    border-radius: 15px 15px 0 0 !important;
+    border-bottom: 0 !important;
+}
+
+.card-footer {
+    border-radius: 0 0 15px 15px !important;
+    border-top: 0 !important;
+}
+
+.container {
+    align-content: center;
+}
+
+.search {
+    border-radius: 15px 0 0 15px !important;
+    background-color: rgba(0, 0, 0, 0.3) !important;
+    border: 0 !important;
+    color: white !important;
+}
+
+.search:focus {
+    box-shadow: none !important;
+    outline: 0px !important;
+}
+
+.type_msg {
+    background-color: rgba(0, 0, 0, 0.3) !important;
+    border: 0 !important;
+    color: white !important;
+    height: 60px !important;
+    overflow-y: auto;
+    width: 100%;  /* Full width for the input field */
+}
+
+.type_msg:focus {
+    box-shadow: none !important;
+    outline: 0px !important;
+}
+
+.attach_btn {
+    border-radius: 15px 0 0 15px !important;
+    background-color: rgba(0, 0, 0, 0.3) !important;
+    border: 0 !important;
+    color: white !important;
+    cursor: pointer;
+}
+
+.send_btn {
+    border-radius: 0 15px 15px 0 !important;
+    background-color: rgba(0, 0, 0, 0.3) !important;
+    border: 0 !important;
+    color: white !important;
+    cursor: pointer;
+}
+
+.search_btn {
+    border-radius: 0 15px 15px 0 !important;
+    background-color: rgba(0, 0, 0, 0.3) !important;
+    border: 0 !important;
+    color: white !important;
+    cursor: pointer;
+}
+
+.contacts {
+    list-style: none;
+    padding: 0;
+}
+
+.contacts li {
+    width: 100% !important;
+    padding: 5px 10px;
+    margin-bottom: 15px !important;
+}
+
+.active {
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+.user_img {
+    height: 70px;
+    width: 70px;
+    border: 1.5px solid #f5f6fa;
+}
+
+.user_img_msg {
+    height: 40px;
+    width: 40px;
+    border: 1.5px solid #f5f6fa;
+}
+
+.img_cont {
+    position: relative;
+    height: 70px;
+    width: 70px;
+}
+
+.img_cont_msg {
+    height: 40px;
+    width: 40px;
+}
+
+.online_icon {
+    position: absolute;
+    height: 15px;
+    width: 15px;
+    background-color: #4cd137;
+    border-radius: 50%;
+    bottom: 0.2em;
+    right: 0.4em;
+    border: 1.5px solid white;
+}
+
+.offline {
+    background-color: #c23616 !important;
+}
+
+.user_info {
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: 15px;
+}
+
+.user_info span {
+    font-size: 20px;
+    color: white;
+}
+
+.user_info p {
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.video_cam {
+    margin-left: 50px;
+    margin-top: 5px;
+}
+
+.video_cam span {
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    margin-right: 20px;
+}
+
+.msg_cotainer {
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: 10px;
+    border-radius: 25px;
+    background-color: rgb(82, 172, 255);
+    padding: 10px;
+    position: relative;
+}
+
+.msg_cotainer_send {
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-right: 10px;
+    border-radius: 25px;
+    background-color: #58cc71;
+    padding: 10px;
+    position: relative;
+}
+
+.msg_time {
+    position: absolute;
+    left: 0;
+    bottom: -15px;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 10px;
+}
+
+.msg_time_send {
+    position: absolute;
+    right: 0;
+    bottom: -15px;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 10px;
+}
+
+.msg_head {
+    position: relative;
+}
+
+#action_menu_btn {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    color: white;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+.action_menu {
+    z-index: 1;
+    position: absolute;
+    padding: 15px 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border-radius: 15px;
+    top: 30px;
+    right: 15px;
+    display: none;
+}
+
+.action_menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.action_menu ul li {
+    width: 100%;
+    padding: 10px 15px;
+    margin-bottom: 5px;
+}
+
+.action_menu ul li i {
+    padding-right: 10px;
+}
+
+.action_menu ul li:hover {
+    cursor: pointer;
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive Design for Smaller Screens */
+@media (max-width: 768px) {
+    .chat {
+        width: 95%;  /* Adjusted width for smaller screens */
+        margin-left: 2.5%;  /* Center horizontally */
+        margin-right: 2.5%;  /* Center horizontally */
+        height: 80vh;  /* Adjusted height for smaller screens */
+        top:50%;
+    }
+
+    .card {
+        height: 100%;  /* Full height for the card */
+    }
+
+    .type_msg {
+        width: 95%;  /* Adjust width of input field for smaller screens */
+    }
+}
+
+#notesHistoryBox {
+    position: absolute;
+    top: 50%;  /* Adjust this value to move it higher */
+    width: 45%;
+    transform: translateY(-50%);
+    margin-left: 55%;  /* Adjusted for better positioning */
+    height: 75vh;
+    margin-right: 2%;
+    border: 2px solid black; /* Adding a black border */
+    border-radius: 10px; /* Optional: Adds rounded corners */
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+#notesHistoryBox label {
+    color: white;           /* Make the label text white */
+    display: block;         /* Ensure the label takes up a full line */
+    text-align: center;     /* Center the text */
+    margin-bottom: 10px;    /* Optional: add space between label and textarea */
+}
+#notesHistory {
+    height: 60vh;
+    top:38%;
+    margin-right: 400px;
+    color:black
+
+
+   /* Increased height of the textarea */
+}
+
+
+/************************/
+
+/* Styling for Edit and Save buttons */
+#editButton, #saveButton, #submitButton {
+    width: 100px;
+    margin-top: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    text-align: center;
+}
+
+/* Edit button styling */
+#editButton {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    transition: background-color 0.3s ease;
+}
+
+#editButton:hover {
+    background-color: #0056b3;
+}
+
+/* Save button styling */
+#saveButton {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    transition: background-color 0.3s ease;
+}
+
+
+
+
+#saveButton:hover {
+    background-color: #218838;
+}
+
+/* Optional: make the container more centered and responsive */
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+  
+}
+
+
+#submitButton {
+      /* Add spacing between the buttons */
+    background-color: #007bff;
+    color: white;
+    border: none;
+    transition: background-color 0.3s ease;
+}
+
+#submitButton:hover {
+    background-color: #0069d9;  /* Slightly darker blue for hover effect */
+}
+
+/*Tabs*/
+/* Style for the toggle buttons container */
+
+/* Container for the buttons */
+#toggleButtonsContainer {
+    display: flex;  /* Align the buttons horizontally */
+    justify-content: flex-end;  /* Align the buttons to the right */
+    gap: 10px;  /* Adds space between the buttons (smaller space to keep them close) */
+    padding-right: 20px;
+    margin-left: auto;  /* Push the container to the right */
+    width: auto;  /* Ensure the container takes up full width */
+    right: 0;
+    position: absolute;
+    margin-right: 20%;
+
+}
+
+/* Style for both buttons to ensure they align properly */
+#toggleNotesButton, #dailyDevotionalButton {
+    border: none;  /* Remove default borders */
+    border-bottom: 3px solid #007bff; /* Blue border at the bottom */
+    padding: 10px 20px;  /* Padding for better appearance */
+    font-size: 16px;  /* Adjust text size */
+    background-color: rgb(44, 47, 59);  /* Background color of the button */
+    color: #007bff;  /* Button text color */
+    cursor: pointer;
+    transition: all 0.3s ease;
+    top:0;
+}
+
+/* Ensure buttons are side by side without extra margins */
+#toggleNotesButton, #dailyDevotionalButton {
+    margin-left: 0;  /* Remove individual margins */
+}
+
+
+/* Hover effect for both buttons */
+#toggleNotesButton:hover, #dailyDevotionalButton:hover {
+    background-color: #007bff;  /* Change background on hover */
+    color: #fff;  /* Change text color on hover */
+}
+/*tab*/
+/* Ensures the hr element spans the full width of the page */
+.border-line{
+    width: 100%;  /* Make the <hr> stretch across the entire width */
+    border: 1px white; /* Optional: Change border style */
+    margin: 0;  /* Optional: Remove default margins */
+    top:10%;
+}
+
+
+
+
+/*style for login*/
+/* Center the login/signup form */
+.container-fluid {
+    height: 100vh;
+    background-color: #1a2a3a;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 0
+
+}
+
+.card {
+   
+    width: 100%;
+    max-width: 400px;
+    border-radius: 15px;
+    background-color: rgba(0, 0, 0, 0.7);
+    height: 60%;
+    margin-top: 0; /* Remove margin on top of the card */
+    padding-top: 0; /
+    
+}
+
+.card-header {
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 15px 15px 0 0;
+    color: white;
+}
+
+.card-body {
+    padding: 20px;
+}
+
+.card-footer {
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 0 0 15px 15px;
+}
+
+.form-group label {
+    color: white;
+    font-weight: bold;
+}
+
+.form-control {
+    background-color: rgba(0, 0, 0, 0.3);
+    border: none;
+    color: white;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    padding: 10px;
+}
+
+.form-control:focus {
+    background-color: rgba(0, 0, 0, 0.5);
+    box-shadow: none;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border: none;
+    color: white;
+    font-size: 16px;
+    padding: 10px;
+    width: 100%;
+    border-radius: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.toggle-btn {
+    background-color: rgba(0, 0, 0, 0.4);
+    color: #007bff;
+    border: none;
+    font-size: 18px;
+    padding: 10px;
+    width: 48%;
+    cursor: pointer;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+.toggle-btn.active {
+    background-color: #007bff;
+    color: white;
+}
+
+.form-container {
+    display: none;
+}
+
+#loginForm {
+    display: block;
+}
+
+/*Tite*/
+/* Center the title-container */
+.title-container {
+    display: flex;
+    justify-content: center;     /* Horizontally center the title */
+    align-items: center;         /* Vertically center the title */
+    width: 100%;                 /* Take full width */
+    flex-direction: column;
+    text-align: center;          /* Center the text */
+    padding:  0;             /* Padding to give some space above and below the title */
+    margin-bottom: 0;         
+}
+
+/* Styling the title */
+.lampway-title {
+    font-size: 30px;             /* Customize the font size */
+    font-weight: bold;
+    margin: 0;                   /* Removes default margin */
+}
+/* Styling the scripture quote */
+.lampway-subheader {
+    font-size: 18px;             /* Adjust size for subheader */
+    color: white;              /* A lighter color for subheader */
+    margin-top: 5px;             /* Add a little space between title and subheader */
+    font-style: italic;          /* Italicize the scripture quote for emphasis */
+}
+
+/* Styling the description text */
+.lampway-description {
+    font-size: 16px;             /* Adjust size for description */
+    color: white;              /* Dark color for description */
+    margin-top: 10px;            /* Add a bit of space between subheader and description */
+    font-weight: normal;         /* Regular font weight for description */
+    font-family: 'Arial', sans-serif;
+}

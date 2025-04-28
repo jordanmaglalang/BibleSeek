@@ -1,0 +1,439 @@
+/* Sidebar Styles */
+#sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 25vw; /* Width of the sidebar when expanded */
+    height: 100%;
+    background-color: white;
+    color: black;
+    transition: width 0.3s ease;
+    padding: 20px;
+    z-index: 1000;
+}
+#app-container {
+    display: flex;
+    height: 100vh; /* Full height of the viewport */
+    transition: all 0.3s ease;
+    background-color: white !important; /
+}
+#sidebar h2 {
+    font-size: 20px;
+}
+
+#sidebar .note-item {
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: rgba(255, 255, 255, 0.6);
+    border-radius: 5px;
+    margin-top: 10px;
+    position:relative;
+    border-color: black;
+    
+}
+.note-item {
+    position: relative; /* This is key! */
+     /* Ensure note items are displayed properly */
+   /* Optional, just for spacing between note items */
+    justify-content: space-between;
+    border-color: black;
+    
+}
+#sidebar .note-item:hover{/* Ensure note items are displayed properly */
+    background-color: gray;
+
+
+}
+
+#sidebar .note-title {
+    font-size: 16px;
+    color: black;
+}
+
+#sidebar .note-menu {
+    position: relative; /* Ensures dropdown is positioned correctly */
+    display: flex;
+    align-items: center;
+}
+
+#sidebar .menu-btn {
+    background: none;
+    border: none;
+    color: black;
+    cursor: pointer;
+    position: relative;
+}
+
+#sidebar .menu-dropdown {
+    display: none;
+}
+
+#sidebar .menu-btn {
+    display: block;
+}
+
+/* Sidebar collapsed styles */
+#sidebar.sidebar-collapsed {
+    width: 1px; 
+    
+}
+#sidebar.sidebar-collapsed .note-item {
+    display: none; /* Hide the note items when sidebar is collapsed */
+}
+#sidebar.sidebar-collapsed h2 {
+    display: none; /* Hide the sidebar title */
+}
+
+
+
+/* Toggle button */
+.toggle-btn {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: none;
+    border: none;
+    color: black;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+/* Main content styles */
+#mainContent {
+    margin-left: 250px; /* Offset for sidebar */
+    transition: margin-left 0.3s ease;
+}
+
+/* When sidebar is collapsed, adjust the main content */
+#mainContent.content-expanded {
+    margin-left: 50px; /* Adjust the width when sidebar is collapsed */
+}
+
+#notesHistoryBox {
+    position: relative;
+    top: 40%;
+    width: 100%;
+   
+    margin-left: 0;
+    height: 10vh;
+    
+    
+    transition: width 0.3s ease, height 0.3s ease;
+}
+
+#notesHistoryBox label {
+    color: white;           /* Make the label text white */
+    display: block;         /* Ensure the label takes up a full line */
+    text-align: center;     /* Center the text */
+    margin-bottom: 10px;    /* Optional: add space between label and textarea */
+}
+#notesHistory {
+    height: 50vh;
+    top:38%;
+   
+    color:black;
+    width: 100h;
+
+
+   /* Increased height of the textarea */
+}
+
+
+
+/*drop down style*/
+/* Dropdown Header (Click to Toggle) */
+#notesHistoryHeader, #journal-header, #bible-header{
+    border-color: black;
+    color: black;
+    padding: 12px;
+    font-size: 16px;
+    cursor: pointer;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 10px 10px 0 0; /* Match box shape */
+}
+
+/* Arrow Rotation Effect */
+#notesHistoryHeader span {
+    transition: transform 0.3s ease-in-out;
+}
+
+/* Rotate arrow when collapsed */
+.collapsed #notesHistoryHeader span {
+    transform: rotate(-90deg);
+}
+
+/* Dropdown Content */
+#notesHistoryContent,#journal-header {
+    padding: 15px;
+    max-height: 60vh;
+    overflow: hidden;
+
+    transition: max-height 0.3s ease-in-out;
+}
+
+/* Hide content when collapsed */
+#notesHistoryContent.collapsed {
+    max-height: 0;
+    overflow: hidden;
+    padding: 0;
+}
+
+
+/* Styling for Edit and Save buttons */
+#editButton, #saveButton, #submitButton, #editButton_journal,#saveButton_journal {
+    width: 100px;
+    margin-top: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    text-align: center;
+}
+
+/* Edit button styling */
+#editButton,#editButton_journal,#saveButton_journal, #saveButton {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    transition: background-color 0.3s ease;
+}
+
+#editButton:hover {
+    background-color: #0056b3;
+}
+
+/* Save button styling */
+#saveButton {
+   
+    color: white;
+    border: none;
+    transition: background-color 0.3s ease;
+}
+
+
+
+
+#saveButton:hover {
+    background-color: #218838;
+}
+
+/* Optional: make the container more centered and responsive */
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+  
+}
+
+
+#submitButton {
+      /* Add spacing between the buttons */
+    background-color: #007bff;
+    color: white;
+    border: none;
+    transition: background-color 0.3s ease;
+}
+
+#submitButton:hover {
+    background-color: #0069d9;  /* Slightly darker blue for hover effect */
+}
+/*my journal*/
+/* Add this CSS to handle the collapsed state */
+#journal-content.collapsed, #item.collapsed {
+    max-height: 0; /* Collapse the content */
+    overflow: hidden; /* Hide overflow when collapsed */
+    transition: max-height 0.3s ease-in-out; /
+}
+
+#journal-header span {
+    transition: transform 0.3s ease; /* Smooth transition for the arrow rotation */
+    
+}
+#journal-content{
+    
+    max-height: 500px; /* Define a max-height, you can adjust as per your requirement */
+    overflow-y: auto; /* Enable vertical scrolling */
+    transition: max-height 0.5s ease-in; 
+}
+
+
+
+/*journal page*/
+.journal-container{
+    display: none; /* Hide journal container by default */
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;  /* Take the full height and width of the parent container */
+    background-color: white;
+     /* Dark background with slight transparency */
+   
+    z-index: 999; /* Ensure it's on top of the chat */
+    margin-left: auto;
+    margin-right: 0;
+}
+#journal-container.active, #bible-container.active {
+    display: block; /* Show only the active container */
+}
+.journal-container textarea {
+    justify-content: center;
+    width: 100%;  /* Full width of the container */
+    height: 100%;  /* Full height of the container */
+    border: 1px solid #ccc;  /* Light border */
+    padding: 0px;  /* Padding inside the text area */
+    font-size: 16px; /* Text size */
+    resize: none; /* Prevent resizing of the textarea */
+    overflow-y: auto !important; /* Ensures vertical scrolling */
+    
+    background-color: #ccc!important;
+    color: black;  
+}
+/* Center the content using Flexbox */
+.container-fluid {
+    flex-grow: 1; /* Ensure the main content fills available space */
+    transition: margin-left 0.3s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    overflow: auto;
+    
+}
+
+/* Center the content using Flexbox */
+#journal-page{
+    width: 50%;
+    height: 100%;
+    border: none;  /* Remove border if necessary */
+    resize: none;  /* Prevent resizing of the textarea */
+    padding: 20px;
+    overflow-y: auto;
+    background-color: white!important;
+    color: black;  
+    white-space: pre-wrap;
+    pointer-events: auto; 
+}
+/*drop down menu*/
+  /* Style 3-dot button */
+  .menu-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+/* Dropdown menu styling */
+.menu-dropdown {
+    display: none;
+    position: absolute;
+    right: 0;
+    background: white;
+    border: 1px solid #ccc;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    padding: 5px;
+    z-index: 10;
+    border-radius: 20%;
+
+}
+
+.menu-dropdown button {
+    display: block;
+    width: 100%;
+    border: none;
+    background: none;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.menu-dropdown button:hover {
+    background-color: #343a40;
+}#bible-item {
+    max-height: 60vh;
+    overflow: hidden;
+    transition: max-height 0.3s ease-in-out;
+}
+
+#bible-item.collapsed {
+    max-height: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+#bible-header span {
+    transition: transform 0.3s ease-in-out;
+}
+
+#bible-container {
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: auto;
+    width: 75vw;
+    height: 100vh;
+    background-color:white; 
+    z-index: 999;
+    margin-left: auto;
+}
+
+/* Positioning the bible page within the container */
+#bible-page {
+    width: 80%; /* Full width of the container */
+    height: 100%; /* Full height of the container */
+    padding: 20px;
+    overflow-y: auto; /* Allow scrolling if content exceeds the height */
+    background-color: #f9f9f9; /* Light background color for content */
+    color: black; /* Black text color */
+    font-size: 20px; /* Default text size */
+    margin-left: 10%;
+    
+}
+
+.arrow-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: transparent;
+    border: none;
+    font-size: 30px;
+    color: #000;
+    cursor: pointer;
+    z-index: 10;
+}
+
+#left-arrow {
+    left: 10px;
+}
+
+#right-arrow {
+    right: 10px;
+}
+
+#bible-header-container {
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    height: 10vh;
+    color: black;
+}
+.verse-number {
+    font-size: 0.7em;
+    color: #999;
+    margin-right: 6px;
+    vertical-align: super;
+}
+
+.editable {
+    min-height: 100px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    width: 100%;
+    font-size: 16px;
+  }
+  

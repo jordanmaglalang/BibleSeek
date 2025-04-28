@@ -1,0 +1,388 @@
+/* Body and general layout styles */
+body, html {
+    height: 100vh;
+    margin: 0;
+    background-color: white!important;
+    display: flex;
+    flex-direction: column;
+    overflow-y: hidden;
+    overflow-x: hidden;
+    
+    font-family: 'Roboto', sans-serif;
+    
+}
+
+/* Chat container */
+.chat {
+    height: 100vh;
+    margin-bottom: auto;
+    width: 77vw;
+    max-width: 100vw;
+    margin: 0;
+    visibility: visible;
+    flex-grow: 1;
+    overflow: auto;
+    transition: margin-left 0.3s ease;
+    border-color: rgba(255, 255, 255, 0.5)
+}
+
+
+
+/* Card layout for chat window */
+.card {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    width: 75%;
+    margin-left: auto;
+    margin-right: 0;
+}
+
+.card.sidebar-collapsed-state {
+    width:95%; /* Change color when sidebar is collapsed */
+}
+/* Row styles */
+.row {
+    height: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: stretch;
+    width: 100%;
+    margin: 0;
+}
+
+/* Container fluid for full width */
+.container-fluid, .row {
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+    transition: margin-left 0.3s ease; 
+}
+.container-fluid {
+    transition: margin-left 0.3s ease; /* Smooth transition */
+}
+.container-fluid.content-expanded {
+    margin-left: 50px; /* Move the content by the collapsed sidebar width */
+}
+/* Contact list styles */
+.contacts_body {
+    padding: 0.75rem 0 !important;
+    overflow-y: auto;
+    white-space: nowrap;
+}
+
+/* Chat message area */
+.msg_card_body {
+    overflow-y: auto;
+}
+
+/* Header for the card (chat window) */
+.card-header {
+    border-radius: 15px 15px 0 0 !important;
+    border-bottom: 0 !important;
+    color: black;
+    text-align: center;
+    font-size: 24px;
+}
+
+/* Footer styles */
+.card-footer {
+    border-radius: 25px !important;
+    border-top: 0 !important;
+    height: auto !important;
+    min-height: 100;
+}
+
+/* Search input styles */
+.search {
+    border-radius: 15px 0 0 15px !important;
+    background-color: rgba(0, 0, 0, 0.3) !important;
+    border: 0 !important;
+    color: white !important;
+}
+
+.search:focus {
+    box-shadow: none !important;
+    outline: 0px !important;
+}
+
+/* Message input field */
+.type_msg {
+    background-color: #fff !important;
+    border: 0 !important;
+    color: black !important;
+    height: 60px !important;
+    overflow-y: auto;
+    width: 100%;
+    padding-top: 5px;
+    text-align: left;
+    vertical-align: top;
+}
+
+.type_msg:focus {
+    box-shadow: none !important;
+    outline: 0px !important;
+}
+
+/* Button styles */
+.attach_btn, .send_btn, .search_btn {
+    border: 0 !important;
+    cursor: pointer;
+}
+
+.attach_btn {
+    border-radius: 15px 0 0 15px !important;
+    color: white !important;
+}
+
+.send_btn {
+    border-radius: 0 15px 15px 0 !important;
+   
+    color: black !important;
+}
+
+.search_btn {
+    border-radius: 0 15px 15px 0 !important;
+    background-color: rgba(0, 0, 0, 0.3) !important;
+    color: white !important;
+}
+
+/* Active contact list item */
+.contacts li {
+    width: 100% !important;
+    padding: 5px 10px;
+    margin-bottom: 15px !important;
+}
+
+.active {
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+/* User profile image */
+.user_img {
+    height: 70px;
+    width: 70px;
+    border: 1.5px solid #f5f6fa;
+}
+
+/* Online/offline status icon */
+.online_icon {
+    position: absolute;
+    height: 15px;
+    width: 15px;
+    background-color: #4cd137;
+    border-radius: 50%;
+    bottom: 0.2em;
+    right: 0.4em;
+    border: 1.5px solid white;
+}
+
+/* Message container (received) */
+.msg_cotainer {
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: 10px;
+    border-radius: 25px;
+    background-color: rgb(30, 30, 30);
+    padding: 10px;
+    position: relative;
+    color: white;
+    font-size: 20px;
+}
+
+.msg_cotainer img.msg_img {
+    width: 35px;  /* Set your preferred size */
+    height: 35px;
+    border-radius: 50%;
+    margin-right: 10px; /* Space between the image and the message */
+}
+
+/* Message container (sent) */
+.msg_cotainer_send {
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-right: 10px;
+    border-radius: 25px;
+    background-color: #007bff;
+    padding: 10px;
+    position: relative;
+    font-size: 20px;
+}
+
+/* Message timestamp */
+.msg_time, .msg_time_send {
+    position: absolute;
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.msg_time {
+    left: 0;
+    bottom: -15px;
+}
+
+.msg_time_send {
+    right: 0;
+    bottom: -15px;
+}
+
+/* Action menu button */
+#action_menu_btn {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    color: white;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+/* Action menu styles */
+.action_menu {
+    z-index: 1;
+    position: absolute;
+    padding: 15px 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border-radius: 15px;
+    top: 30px;
+    right: 15px;
+    display: none;
+}
+
+/* Tabs container */
+#toggleButtonsContainer {
+    display: flex;
+    justify-content: flex-start;
+    margin-right: auto;
+    width: auto;
+    left: 0;
+    position: absolute;
+    margin-left: 20%;
+}
+
+
+#toggleNotesButton, #dailyDevotionalButton {
+    margin-left: 0;
+}
+
+#toggleNotesButton:hover, #dailyDevotionalButton:hover {
+    background-color: #007bff;
+    color: #fff;
+}
+
+/* Typing effect */
+.typing-effect::after {
+    content: "|";
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    50% { opacity: 0; }
+}
+
+.typing-indicator {
+    font-weight: bold;
+    opacity: 0.6;
+    animation: dots 1.5s infinite;
+}
+
+@keyframes dots {
+    0% { content: "."; }
+    33% { content: ".."; }
+    66% { content: "..."; }
+    100% { content: ""; }
+}
+
+/* Responsiveness */
+@media (max-width: 768px) {
+    .chat {
+        width: 95%;
+        margin-left: 2.5%;
+        margin-right: 2.5%;
+        height: 80vh;
+        top: 50%;
+    }
+
+    .card {
+        height: 100%;
+    }
+
+    .type_msg {
+        width: 95%;
+    }
+
+    #notesHistoryBox {
+        width: 100%;
+        margin-left: 0;
+        height: 40vh;
+    }
+}
+
+/* User Info Styling */
+.user_info span {
+    font-size: 30px;
+    color: black; /* Title color */
+    font-weight: bold; /* Optional: Make the title bold */
+    text-align: center;
+}
+
+.user_info p {
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+#notesHistoryBox {
+    position: absolute;
+    top: 50%;
+    width: 45%;
+    transform: translateY(-50%);
+    margin-left: 55%;
+    height: 75vh;
+    margin-right: 2%;
+    
+    border-radius: 10px;
+    background-color: white!important;
+}
+.msg_cotainer {
+    background-color:white!important; /* Change this color to whatever you want */
+    color: black;
+}
+.msg_cotainer_send {
+    background-color: #007bff; /* You can also modify the user messages here */
+    color: black;
+}
+.msg_cotainer, .card, .container-fluid, .row {
+    border: none; /* Remove any black borders */
+}
+/* General background color reset for containers */
+.card, .container-fluid, .row, .chat {
+    background-color: white !important;
+    border:none!important /* Remove any black background */
+}
+
+#messageArea {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center; 
+    border-color: rgba(255, 255, 255, 0.5);
+    height: 200px;
+
+    
+}
+
+#text {
+    min-height: 120px;  /* Adjust height */
+    width: 80%; /* Adjust width, 80% of the available space */
+    padding: 12px; /* Padding inside the input field */
+    font-size: 20px; /* Font size */
+    border-radius: 30px; /* Optional: Add rounded corners */
+    text-align: left;
+   ;
+}
+.input-group-append {
+    display: flex;
+    align-items: center; /* Vertically center the button */
+}

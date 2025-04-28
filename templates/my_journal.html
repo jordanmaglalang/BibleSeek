@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Journal</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css')}}"/>
+    <style>
+        /* Full viewport height */
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            overflow: hidden !important;
+        }
+
+        /* Center the content using Flexbox */
+        .container-fluid {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            overflow: auto;
+            
+        }
+
+        .journal-container {
+            justify-content: center;
+            width: 80%;  /* Adjust the width to suit your design */
+            max-width: 900px; /* Limit the width on larger screens */
+            background-color: white; /* White background for the text area */
+            padding: 30px;
+            border-radius: 10px; /* Rounded corners */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for a floating effect */
+            height: 100vh; /* Adjust the height as per your design */
+             /* Allows scrolling if content overflows */
+        }
+
+        .journal-container textarea {
+            justify-content: center;
+            width: 100%;  /* Full width of the container */
+            height: 100%;  /* Full height of the container */
+            border: 1px solid #ccc;  /* Light border */
+            padding: 0px;  /* Padding inside the text area */
+            font-size: 16px; /* Text size */
+            resize: none; /* Prevent resizing of the textarea */
+            overflow-y: auto !important; /* Ensures vertical scrolling */
+        }
+
+        .journal-header {
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        /* Adjust styles for the toggle button */
+        #toggleNotesButton {
+            width: 200px;
+            margin-top: 30px;
+            margin-bottom: 20px;
+        }
+
+        /* Border line */
+        .border-line{
+            width: 100%;  /* Make the <hr> stretch across the entire width */
+            border: 1px white; /* Optional: Change border style */
+            margin: 0;  /* Optional: Remove default margins */
+        }
+
+        #sidebar {
+            width: 40vh;
+            background-color: #f4f4f4;
+            padding: 15px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            height: 100%;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            top:0;
+        }
+        #content {
+            margin-left: 270px;
+            padding: 20px;
+            flex-grow: 1;
+        }
+        .note-item {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #e0e0e0;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 10;
+        }
+        .note-item:hover {
+            background-color: #c0c0c0;
+        }
+        #editButton_journal, #saveButton_journal {
+            width: 100px;
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            text-align: center;
+            visibility: visible;
+        }
+        /* Style 3-dot button */
+    .menu-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+    /* Dropdown menu styling */
+    .menu-dropdown {
+        display: none;
+        position: absolute;
+        right: 0;
+        background: white;
+        border: 1px solid #ccc;
+        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+        padding: 5px;
+        z-index: 10;
+    }
+
+    .menu-dropdown button {
+        display: block;
+        width: 100%;
+        border: none;
+        background: none;
+        cursor: pointer;
+        padding: 5px;
+    }
+
+    .menu-dropdown button:hover {
+        background-color: #f0f0f0;
+    }
+
+</style>
+</head>
+<body>
+    <div id="sidebar">
+        <h2>Notes</h2>
+        <div>
+            {% for note in notes %}
+                <div class="note-item" data-id= "{{ note['_id'] }}" >
+                        
+                    <span class="note-title">{{ (note['note'][:20]) + '...'|safe }}</span>
+                    <div class="note-menu">
+                        <button class="menu-btn">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                        <div class="menu-dropdown">
+                            <button class="edit-note">Edit</button>
+                            <button class="delete-note">Delete</button>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+    </div>
+
+    <!-- Border Line -->
+    <div class="border-line">
+        <hr>
+    </div>
+
+    
+    
+    <div class="container-fluid">
+      
+            
+        <div class="journal-container">
+            <textarea id="journal-page">{{ note_content}}</textarea>
+        </div>
+       
+       
+    </div>
+    
+
+
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    
+</body>
+</html>
