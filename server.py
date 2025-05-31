@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify, render_template, session, redirect, url_for
-from db import client, db, notes_collection, users_collection, bible_collection
+from db import client, db, notes_collection, users_collection
 from dotenv import load_dotenv
 import os
 from bson import ObjectId
@@ -31,12 +31,19 @@ def initialize_session():
             "page":0,
             "book_number":0,
             "checkpoint": 0,
+            "start_trial": False,
+            "trial_run": 0,
         }
 @app.route("/")
 def index():
-    #return render_template('Versify_front.html')
-    
+   
+    user_id = session['data'].get("user_id")
     initialize_session()
+    print("logged users is ", bool(user_id))
+    return render_template('home.html',logged_in=bool(user_id))
+@app.route('/login')
+def login():
+    print("login ")
     return render_template('login.html')
 
 @app.route("/submit_signup", methods=["POST"])
@@ -51,6 +58,26 @@ def submit_login():
     session_data = session
     print(session_data['data']['user_id'])
     return login_logic(session_data, request)
+
+
+@app.route("/logout", methods=["POST"])
+def log_out():
+    print("before logged out ", session['data']['user_id'])
+    session['data'] = {
+            "user_id": None,
+            "curr_id": None,
+            "notes_history": [],
+            "page":0,
+            "book_number":0,
+            "checkpoint": 0,
+            "start_trial": False,
+            "trial_run": 0,
+        }
+    print("Logged out , ", session['data']['user_id'])
+    
+    return jsonify({"Success": True}), 200
+
+
 
 @app.route("/versify_front")
 def versify_front():
@@ -79,12 +106,21 @@ def versify_front():
         current_id = None
         session['data']['curr_id'] = None   
     
-    return render_template('home.html',notes=entries_list, note_content=note_content, curr_id = current_id)
+    return render_template('home.html',notes=entries_list, note_content=note_content, curr_id = current_id,logged_in=bool(user_id))
 
 @app.route('/get', methods=["POST"])
 def chat():
-    # Get the message from the user iAnput
-  
+    print("updated trial run, ", session['data']['trial_run'])
+    # Get the message from the user input
+    if session['data']['user_id']== None and session['data']['start_trial'] == False:
+        session['data']['start_trial'] = True
+        session['data']['trial_run'] = 3
+        print("trial run is ", session['data']['trial_run'])
+    if session['data']['user_id']== None and session['data']['start_trial'] == True and session['data']['trial_run'] == 0:
+       return jsonify({"redirect":True, "url": url_for('login')})
+
+    if session['data']['user_id'] == None:
+        session['data']['trial_run'] -=1
     msg = request.form["msg"]
     
     session_data = session['data']
@@ -148,10 +184,41 @@ def submit_notes():
     session.modified = True
     global notes
     notes = []
-    
+    print("NEWST NOTE ", updated_notes_history[len(updated_notes_history) - 1])
 
     return jsonify({'success': True, 'message': 'Notes submitted successfully','updated_notes':updated_notes_history}), 200
+
+@app.route('/get_latest_notes', methods=['GET'])
+def get_latest_notes():
+    if 'user_id' not in session['data']:
+        return jsonify({'success': False, 'message': 'User not logged in'}), 401
     
+    user_id = session['data']['user_id']
+    
+    try:
+        # Get all notes for the current user, sorted by date (newest first)
+        notes = list(notes_collection.find(
+            {"user_id": str(ObjectId(user_id))},
+            {"note": 1, "created_at": 1, "_id": 1}
+        ).sort("created_at", -1))
+
+        # Prepare the response with properly serialized data
+        response_data = {
+            'success': True,
+            'notes': [{
+                '_id': str(note['_id']),
+                'note': note['note'],
+                'created_at': note['created_at'].isoformat()
+            } for note in notes]
+        }
+        return jsonify(response_data), 200
+
+    except Exception as e:
+        print(f"Error fetching notes: {str(e)}")
+        return jsonify({'success': False, 'message': 'Error fetching notes'}), 500
+
+
+
 @app.route('/my_journal', methods=['GET'])
 def my_journal():
     user_id = session.get('user_id')
@@ -231,134 +298,6 @@ def delete_note():
     else:
     
         return jsonify({"success": False, "message": "Invalid ID"}), 400
-@app.route('/view_bible', methods=["GET"])
-def read_bible():
-    
-   
-    bible_data = bible_collection.find_one({}, {"_id": 0})  # Exclude MongoDB ID
-
-    if not bible_data:
-        return jsonify({"success": False, "message": "Bible data not found"}), 404
-
- 
-    
-    # Return the first chapter of Genesis as an example
-    if session['data']['checkpoint'] ==0:
-        session['data']['book_number']=65
-        session['data']['page']=21
-        session.modified = True
-    
-    first_chapter = bible_data['books'][session['data']['book_number']]['chapters'][session['data']['page']]['verses']
-    #result = result.replace("\n", "<br>")
-    #print(result)
-    session['data']['checkpoint']+=1
-    session.modified=True
-    all_verses=[]
-    for a in range(len(first_chapter)):# one group of verses
-            verse_text = first_chapter[a]['text'].replace("¶", "").strip()
-            item = f"<span class='verse-number'>{first_chapter[a]['verse']}</span> {verse_text}"
-            all_verses.append(item)#each verse added to list of verses in chapter
-    
-    result = " ".join(all_verses)
-  
-    result = result.replace(" ", "  ")
-    
-
-    current_book = bible_data['books'][session['data']['book_number']]['name']
-    current_chapter_number = session['data']['page'] + 1  #
-    current_page = f"{current_book}  {current_chapter_number}"
-
-    result = result.replace("\n\n", "<br><br>")
-    return jsonify({"success": True, "data": result, "current_chapter": current_page})
-
-@app.route('/next_chapter', methods=["GET"])
-def next_chapter():
-    print("next chapter check")
-    bible_data = bible_collection.find_one({}, {"_id": 0})  # Exclude MongoDB ID
-
-    if not bible_data:
-        return jsonify({"success": False, "message": "Bible data not found"}), 404
-    #print(bible_data['books'][session['data']['book_number']]['chapters'])
-    if(session['data']['page']+1<len(bible_data['books'][session['data']['book_number']]['chapters'])):
-        session['data']['page']+=1
-    else:
-        if session['data']['book_number']+1 >= len(bible_data['books']):
-            session['data']['book_number']=0
-            session['data']['page']=0
-            
-        else:
-            session['data']['book_number']+=1
-            session['data']['page']=0
-    session.modified = True
-
-    
-    #print(session['data']['books'][0][0])3
-
-    return read_bible()
-@app.route('/previous_chapter', methods=["GET"])
-def previous_chapter():
-    print("next chapter check")
-    bible_data = bible_collection.find_one({}, {"_id": 0})  # Exclude MongoDB ID
-
-    if not bible_data:
-        return jsonify({"success": False, "message": "Bible data not found"}), 404
-    #print(bible_data['books'][session['data']['book_number']]['chapters'])
-    if(session['data']['page']>0):
-        session['data']['page']-=1
-    else:
-        if session['data']['book_number'] == 0:
-            session['data']['book_number'] = len(bible_data['books']) - 1  # Last book index
-            session['data']['page'] = len(bible_data['books'][session['data']['book_number']]['chapters']) - 1  # Last chapter index
-        else:
-            # Otherwise, move to the last chapter of the previous book
-            session['data']['book_number'] -= 1
-            session['data']['page'] = len(bible_data['books'][session['data']['book_number']]['chapters']) - 1
-
-    session.modified = True
-
-    
-    #print(session['data']['books'][0][0])3
-
-    return read_bible()
-
-
-
-
-@app.route('/send_verses', methods=["POST"])
-def send_verses():
-    verses = request.json.get('verses', [])
-    notes_text = request.json.get('notes_text', "")
-
-    # Fetch the Bible data from MongoDB
-    bible_data = bible_collection.find_one({}, {"books": 1})
-    
-   
-   
-
-    # Iterate through each verse reference
-    for verse_ref in verses:
-        parts = verse_ref.rsplit(' ', 1)
-        book_name = parts[0]  # "1 Corinthians"
-        chapter_verse = parts[1]
-        chapter, verse = chapter_verse.split(":")
-        chapter = int(chapter) - 1  # MongoDB is 0-indexed
-        if len(verse.split("-"))>1:
-            verse1, verse2 = verse.split("-")
-            print("verse1 ", verse1, " and ", verse2)
-
-        book_data = bible_collection.find_one({"books.name": book_name})
-        if not bible_data:
-            print("bible_data not found")
-            return jsonify({"success": False, "message": "Book not found"}), 404
-        chapters = book_data['chapters']
-        chapter_num = chapters.find_one({"chapter": chapter})
-        if chapter_num:
-            print("found chapter num")
-    return jsonify({
-        "message": "Verses highlighted successfully!",
-        "highlighted_notes": notes_text
-    })
-
 
 
 

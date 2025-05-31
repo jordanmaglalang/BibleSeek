@@ -13,8 +13,8 @@
     <div class="title-container">
         <h5 class="lampway-title">BibleSeek</h5>  
         
-        <h6 class="lampway-subheader">"Your word is a lamp to my feet, a light on my path" - Psalm 119:105</h6> <!-- Scripture quote -->
-        <p class="lampway-description">Your Bible Chat AI</p> 
+        
+        <p class="lampway-description">Your AI Bible Study Chat</p> 
     </div>
 <div class="container-fluid d-flex justify-content-center align-items-center h-100">
     
@@ -115,6 +115,15 @@
                 }
             });
         });
+
+
+         // Handle query parameter to toggle the correct form
+        const formType = getQueryParam('form');
+        if (formType === 'signup') {
+            $('#signupButton').click(); // Trigger sign up toggle
+        } else {
+            $('#loginButton').click(); // Default to login
+        }
     });
 
     $('#loginFormElement').submit(function(event) {
@@ -142,7 +151,17 @@
                     alert("Invalid email or password. Please try again.");
                 }
             });
+
+
+
+
         });
+    function getQueryParam(param) {
+        let urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(param);
+    }
+
+    
 
 
 

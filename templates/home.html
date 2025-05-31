@@ -15,7 +15,7 @@
     <div id="app-container">
     <!-- Toggle Button at the top of the page -->
         <div id="sidebar" class="sidebar-expanded">
-            <h2>Notes</h2>
+            <h2>Your Journal</h2>
         
             
                 <!-- Clickable Header (Dropdown Trigger) -->
@@ -58,14 +58,7 @@
             
                     
                 </div>
-                <div id="bible-header">
-                    Your Bible<span>▼</span>
-                    
-                </div>
-                <div id="bible-item" class="collapsed">
-                    <button id="bible-button">KJV version</button>
-                    
-                </div>
+                
                 
 
         
@@ -90,10 +83,25 @@
                             
                                 <div class="user_info" style="color: black; text-align: center;">
                                     <span>BibleSeek</span>
-                                
+                                    
+
                                 </div>
+                                {% if not logged_in %}
+                                    <div class="auth-buttons">
+                                        <a href="/login?form=signup" class="btn signup-btn">Sign Up</a>
+                                        <a href="/login?form=login" class="btn login-btn">Login</a>
+                                    </div>
+                                {% endif %}
+                                {% if logged_in %}
+                                    <div class="auth-buttons">
+                                        
+                                        <button id="sign-out" class="btn login-btn">Sign out</button>
+
+                                    </div>
+                                {% endif %}
                                 
                             </div>
+                           
                         </div>
                         <div id="messageFormeight" class="card-body msg_card_body">
                             <!-- Chat messages will be dynamically added here -->
@@ -147,4 +155,3 @@
 
 </body>
 </html> 
-

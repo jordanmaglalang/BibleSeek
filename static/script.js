@@ -9,20 +9,7 @@ $(document).ready(function(){
             return `<a href="${url}" target="_blank">${match}</a>`;
         })
         .replace(/\n/g, "<br>"); 
-        $.ajax({
-            type: "POST",
-            url: "/send_verses",  // Adjust this URL to the route where you want to send the data
-            contentType:"application/json",
-            data: JSON.stringify({ verses: verses }),
-            success: function(response) {
-                // Handle success
-                console.log("Verses sent successfully!", response);
-            },
-            error: function(xhr, status, error) {
-                // Handle error
-                console.log("Error sending verses:", error);
-            }
-        });
+        
     
         
         
@@ -33,13 +20,15 @@ $(document).ready(function(){
     
     
 
-    $(".menu-btn").on("click", function(event) {
-        event.stopPropagation();  // Prevent the click event from propagating to the document
-        let $dropdown = $(this).siblings(".menu-dropdown");
-        $dropdown.toggle();  // Toggle the dropdown visibility
-
-        $(".menu-dropdown").not(dropdown).hide();
-        $dropdown.toggle();
+    $(document).on("click", ".menu-btn", function (e) {
+        e.stopPropagation(); // Prevent click from bubbling up
+        // Close other dropdowns
+        $(".menu-dropdown").not($(this).siblings(".menu-dropdown")).hide();
+        // Toggle this one
+        $(this).siblings(".menu-dropdown").toggle();
+    });
+    $(document).on("click", function () {
+        $(".menu-dropdown").hide();
     });
 
     // Function to close the dropdown
@@ -76,7 +65,20 @@ $(document).ready(function(){
             url: "/get", // Ensure this matches your Flask route URL
         }).done(function (data) {
             console.log("Data:", data);
+            if (data.redirect) {
+                const alertHtml = `
+                    <div class="d-flex justify-content-start mb-4">
+                        <div class="msg_cotainer alert-message">
+                            You’ve reached your trial limit. Please <a href="${data.url}" class="alert-link">log in</a> or sign up to continue.
+                        </div>
+                    </div>`;
+                $("#messageFormeight").append(alertHtml);
+                
+                var messageFormeight = $("#messageFormeight")[0];
+                messageFormeight.scrollTop = messageFormeight.scrollHeight;
 
+                return;
+            }
             // Bot message container (empty at first)
             var botHtml = `
                 <div class="d-flex justify-content-start mb-4">
@@ -92,7 +94,7 @@ $(document).ready(function(){
             $("#messageFormeight").append($botMessage);
             
             // Typing animation function
-            function typeText(element, text, index = 0, speed = 1) {
+            function typeText(element, text, index = 0, speed = -4) {
                 if (index === 0) {
                     element.find(".typing-indicator").remove(); // Remove typing indicator
                     element.html(""); // Clear previous content before typing starts
@@ -184,37 +186,79 @@ $(document).ready(function(){
     });
 
     $("#submitButton").on("click", function() {
-        var updatedNotes = $("#notesHistory").val();  // Get the current notes content
+        var updatedNotes = $("#notesHistory").val();
         $.ajax({
             type: "POST",
-            url: "/submit_notes",  // The route to handle submission
-            data: { notes: updatedNotes},
+            url: "/submit_notes",
+            data: { notes: updatedNotes },
             success: function(response) {
-                if (response.success) {
+                if (response.success && response.updated_notes) {
                     alert("Notes submitted successfully!");
                     $("#notesHistory").val("");  // Clear the notes history
-                   
-                
-                    if(response.updated_notes) {
-                        var newNoteHtml = `<div class="note-item">${response.updated_notes[-1]}</div>`;
-                        $("#journal-content").append(newNoteHtml);  // Append to #journal-content
+                    
+                    // Clear existing notes first
+                    var journalContent = $("#journal-content").detach();
 
-                        // Optional: Ensure the content is visible
-                        $("#journal-content").removeClass("collapsed");
-                        $("#journal-header span").css("transform", "rotate(0deg)");
-                    } else {
-                        alert("No notes content returned!");
-                    } // Reset any rotation of arrow
+
+                    journalContent.empty();
+                    
+                    // Add all notes including the new one
+                    response.updated_notes.forEach(function(note) {
+                        var newNoteHtml = createNoteElement(note);
+                        $("#journal-content").append(newNoteHtml);
+                    });
+
+                    $("<div style='display:none'></div>").append(journalContent).appendTo("body");
+
+                    
+                    $("#journal-header").after(journalContent);
+                   
+                    
                 } else {
                     alert("There was an issue submitting the notes.");
                 }
-                
-            },
-            error: function(xhr, status, error) {
-                console.log("Error:", error);
-            }
+        },
+        error: function(xhr, status, error) {
+            console.log("Error:", error);
+        }
         });
     });
+
+    function createNoteElement(note) {
+        // Create the main note container
+        var noteItem = $('<div></div>')
+         .addClass('note-item')
+         .attr('data-id', note._id);
+    
+        // Create and add the note title
+        var noteTitle = $('<span></span>')
+            .addClass('note-title')
+            .text((note.note || '').slice(0, 30));
+    
+         // Create the menu container
+        var noteMenu = $('<div></div>').addClass('note-menu');
+    
+        // Create menu button
+        var menuBtn = $('<div></div>')
+            .addClass('menu-btn')
+            .append($('<i></i>').addClass('fas fa-ellipsis-v'));
+    
+        // Create dropdown menu
+        var menuDropdown = $('<div></div>')
+            .addClass('menu-dropdown')
+            .append($('<button></button>').addClass('edit-note').text('Edit'))
+            .append($('<button></button>').addClass('delete-note').text('Delete'));
+    
+        // Assemble the menu
+        noteMenu.append(menuBtn).append(menuDropdown);
+    
+        // Assemble the complete note item
+        noteItem.append(noteTitle).append(noteMenu);
+    
+        return noteItem;
+    }
+    
+   
 
 
     $("#toggleNotesButton").on("click", function() {
@@ -239,7 +283,8 @@ $(document).ready(function(){
 
 
 
-    $('.note-item').on('click', function() {
+    $(document).on('click', '.note-item', function() {
+        $('.note-item').removeClass('selected');
         // Get the note ID from the 'data-id' attribute
         var noteId = $(this).data('id');
         console.log("Note ID clicked: " + noteId); // Debugging log
@@ -361,7 +406,7 @@ $(document).ready(function(){
   
     
 
-    $("#sidebar").on("click", ".delete-note", function() {
+   $(document).on("click", ".delete-note", function() {
         var noteId = $(this).closest('.note-item').data('id');
         if(confirm("Are you sure you want to delete this note?")) {
             $.ajax({
@@ -418,14 +463,51 @@ $(document).ready(function(){
         arrow.css("transform", content.hasClass("collapsed") ? "rotate(-90deg)" : "rotate(0deg)");
     });
 
-    $("#journal-header").on("click", function () {
+   $("#journal-header").on("click", function() {
         var content = $("#journal-content");
         var arrow = $(this).find("span");
-
+        
+        // Check if the dropdown is currently collapsed (arrow pointing right)
+        const isCollapsed = content.hasClass("collapsed");
+        
+        // Only fetch notes if we're expanding the dropdown (arrow will point down)
+        if (isCollapsed) {
+            fetchLatestNotes();
+        }
+        
+        // Toggle the collapsed state
         content.toggleClass("collapsed");
-        arrow.css("transform", content.hasClass("collapsed") ? "rotate(-90deg)" : "rotate(0deg)");
+        arrow.css("transform", isCollapsed ? "rotate(0deg)" : "rotate(-90deg)");
     });
-    
+
+    function fetchLatestNotes() {
+        $.ajax({
+            type: "GET",
+            url: "/get_latest_notes",
+            success: function(response) {
+                if (response.success) {
+                    // Clear existing notes
+                    $("#journal-content").empty();
+                    
+                    // Add all notes including any new ones
+                    response.notes.forEach(function(note) {
+                        var noteHtml = createNoteElement(note);
+                        $("#journal-content").append(noteHtml);
+                    });
+                }
+            },
+            error: function(xhr, status, error) {
+                console.log("Error fetching notes:", error);
+            }
+        });
+    }
+
+
+
+
+
+
+
     $("#bible-header").on("click", function () {
         var content = $("#bible-item");
         var arrow = $(this).find("span");
@@ -464,6 +546,24 @@ $(document).ready(function(){
             error: function(xhr, status, error) {
                 console.log("Error:", error);
             }
+        });
+    });
+
+   $(document).ready(function() {
+        $("#sign-out").on("click", function(e){
+            e.preventDefault();
+
+            $.ajax({
+                type: "POST",
+                url: "/logout",
+                success: function(response){
+                    console.log("Successfully signed out");
+                    window.location.href = "/login";
+                },
+                error: function(xhr, status, error) {
+                    console.log("Error:", error);
+                }
+            });
         });
     });
 

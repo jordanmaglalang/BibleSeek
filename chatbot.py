@@ -133,7 +133,8 @@ Here is the explanation you have to summarize:
 
 """
 def user_input(state: AgentState):
-    print(len(chat_history))
+    
+    print("chat history", len(chat_history))
     if len(chat_history) == 0:
         AI_input = SystemMessage(content="Hello! I am an AI assistant specializing in Bible-related topics. How can I assist you today?")
     else:

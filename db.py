@@ -10,6 +10,7 @@ client = MongoClient('mongodb+srv://jmangz_12:nPTPrIt6cadofjUT@deploy1.acfeo.mon
 db = client['user_database']
 users_collection = db['users']
 notes_collection = db['notes_history']
+"""
 bible_collection = db['bible_text']
 with open('bible_text/kjv.json', 'r', encoding='utf-8') as file:
     bible_data = json.load(file)
@@ -27,5 +28,6 @@ def create_indexes():
 
 # Call the function to create indexes when the application starts
 create_indexes()
+"""
 if __name__ == '__main__':
     app.run(debug=True)
