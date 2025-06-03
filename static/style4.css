@@ -549,6 +549,201 @@ body, html {
     background-color: #414b66!important;
 }
 
+/* MOBILE-ONLY FIXES - Add to end of paste-2.txt, keep all existing desktop styles */
+
+/* Prevent scrolling and overscroll on mobile */
+@media (max-width: 768px) {
+    /* Lock the HTML and body to prevent any scrolling */
+    html, body {
+        height: 100vh !important;
+        max-height: 100vh !important;
+        overflow: hidden !important; /* Prevents scrolling of main page */
+        position: fixed !important; /* Locks the viewport */
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    
+    /* App container should fill exactly the viewport */
+    #app-container {
+        height: 100vh !important;
+        max-height: 100vh !important;
+        overflow: hidden !important;
+        width: 100vw !important;
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+    }
+    /* Container fluid - fit exactly within remaining space */
+    .container-fluid {
+        height: 100vh !important;
+        max-height: 100vh !important;
+        overflow: hidden !important;
+        width: calc(100vw - 15vw) !important; /* Account for sidebar */
+        margin-left: 15vw !important;
+        position: fixed !important;
+        top: 0 !important;
+        right: 0 !important;
+        padding: 0 !important;
+    }
+    
+    /* When sidebar is collapsed, expand to full width */
+    #sidebar.sidebar-collapsed + .container-fluid {
+        width: 100vw !important;
+        margin-left: 0 !important;
+    }
+    #sidebar {
+        width: 15vw !important; /* Smaller sidebar on mobile */
+        padding: 10px 5px !important;
+    }
+    
+    #sidebar h2 {
+        font-size: 14px !important;
+    }
+    
+    #sidebar .note-item {
+        padding: 6px 3px !important;
+        margin-bottom: 6px !important;
+    }
+    
+    #sidebar .note-title {
+        font-size: 11px !important;
+    }
+    
+    /* Collapsed sidebar on mobile */
+    #sidebar.sidebar-collapsed {
+        width: 0px !important;
+        padding: 0 !important;
+    }
+    
+    /* Chat container - fit exactly within container */
+    .chat {
+        width: 100% !important; 
+        height: 100vh !important; 
+        max-height: 100vh !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: hidden !important;
+    }
+
+    /* Card fills exact space without overflow */
+    .card {
+        height: 100vh !important;
+        max-height: 100vh !important;
+        width: 100% !important;
+        margin: 0 !important;
+        border-radius: 0 !important; /* Remove rounded corners to fit exactly */
+        overflow: hidden !important;
+        display: flex !important;
+        flex-direction: column !important;
+    }
+    
+    /* Header - fixed height */
+    .msg_head {
+        height: 60px !important;
+        min-height: 60px !important;
+        max-height: 60px !important;
+        flex-shrink: 0 !important;
+        overflow: hidden !important;
+    }
+    
+    /* Message area - takes remaining space */
+    .msg_card_body, #messageContainer {
+        flex: 1 !important;
+        height: calc(100vh - 120px) !important; /* Account for header and input */
+        max-height: calc(100vh - 120px) !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+    }
+    
+    /* Input area - fixed at bottom */
+    #messageAreaContainer {
+        height: 60px !important;
+        min-height: 60px !important;
+        max-height: 60px !important;
+        flex-shrink: 0 !important;
+        overflow: hidden !important;
+        padding: 5px !important;
+    }
+    
+    /* Input area positioning */
+    .type_msg {
+        height: 50px !important;
+        font-size: 14px !important;
+    }
+    
+    /* Header text size */
+    .user_info span {
+        font-size: 16px !important;
+    }
+    
+    /* Auth buttons */
+    .auth-buttons .btn {
+        padding: 5px 8px !important;
+        font-size: 12px !important;
+    }
+    
+    /* Sidebar content adjustments */
+    #notesHistoryContent {
+        max-height: 35vh !important;
+    }
+    
+    #notesHistory {
+        height: 25vh !important;
+    }
+    
+    #journal-content {
+        max-height: 30vh !important;
+    }
+    
+    /* Button sizing */
+    #editButton, #saveButton, #submitButton {
+        width: 30% !important;
+        font-size: 11px !important;
+        padding: 6px !important;
+        margin: 2px !important;
+    }
+}
+
+    /* Small mobile phones */
+    @media (max-width: 480px) {
+        .container-fluid {
+            width: calc(100vw - 12vw) !important;
+            margin-left: 12vw !important;
+        }
+        
+        #sidebar.sidebar-collapsed + .container-fluid {
+            width: 100vw !important;
+            margin-left: 0 !important;
+        }
+        
+        #sidebar {
+            width: 12vw !important;
+        }
+        
+        #sidebar h2 {
+            display: none !important;
+        }
+        
+        #sidebar .note-title {
+            font-size: 9px !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+        }
+        
+        .user_info span {
+            font-size: 14px !important;
+        }
+        
+        .auth-buttons .btn {
+            padding: 4px 6px !important;
+            font-size: 11px !important;
+        }
+    }
+
+
+
+
 
 
 

@@ -156,7 +156,8 @@ def submit_notes():
         return jsonify({'message':'Invalid request, missing notes'}),400
     
     if 'user_id' not in session['data']:
-        return jsonify({'message':'User not logged in'})
+        return jsonify({'success': False, 'message': 'User not logged in'}), 401
+
     
     user_id = session['data']['user_id']
 
@@ -190,8 +191,10 @@ def submit_notes():
 
 @app.route('/get_latest_notes', methods=['GET'])
 def get_latest_notes():
-    if 'user_id' not in session['data']:
-        return jsonify({'success': False, 'message': 'User not logged in'}), 401
+    print("get latest notes")
+    if session['data']['user_id'] == None:
+        print("not logged in")
+        return jsonify({"redirect":True, "url": url_for('login')})
     
     user_id = session['data']['user_id']
     
@@ -304,6 +307,7 @@ def delete_note():
 if __name__ == '__main__':
     
     app.run(debug=True)
+
     
 
 

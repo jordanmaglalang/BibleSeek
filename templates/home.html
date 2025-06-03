@@ -7,20 +7,24 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css')}}"/>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style3.css')}}"/>
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    
     
 </head> 
 <body>
+    <!-- Somewhere near the top of <body> -->
+    <div id="user-status" data-logged-in="{{ 'true' if logged_in else 'false' }}"></div>
+
     <div id="app-container">
     <!-- Toggle Button at the top of the page -->
         <div id="sidebar" class="sidebar-expanded">
-            <h2>Your Journal</h2>
+            <h2>Your Journal📘</h2>
         
             
                 <!-- Clickable Header (Dropdown Trigger) -->
                 <div id="notesHistoryHeader">
-                    Current Notes <span>▼</span>
+                    Write that down!✍️✨<span>▼</span>
                 </div>
                 
                 <!-- Collapsible Content -->
@@ -29,12 +33,12 @@
                     <div id="buttonContainer">
                         <button id="editButton" class="btn">Edit</button>
                         <button id="saveButton" class="btn">Save</button>
-                        <button id="submitButton" class="btn">Add to Notes</button>
+                        <button id="submitButton" class="btn">Add to Journal📝</button>
                     </div>
                 </div>
                 
                 <div id="journal-header">
-                    All Notes<span>▼</span>
+                    Journal<span>▼</span>
                 </div>
                 
                 <div id="journal-content" class="collapsed">
@@ -45,10 +49,10 @@
                                 <span class="note-title">{{ (note['note'][:30])  }}</span>
                                 <div class="note-menu">
                                     <div class="menu-btn">
-                                        <i class="fas fa-ellipsis-v"></i>
+                                        <i class="fas fa-trash-alt"></i>
                                     </div>
                                     <div class="menu-dropdown">
-                                        <button class="edit-note">Edit</button>
+                                        
                                         <button class="delete-note">Delete</button>
                                     </div>
                                 </div>
@@ -82,7 +86,7 @@
                             <div class="d-flex bd-highlight">
                             
                                 <div class="user_info" style="color: black; text-align: center;">
-                                    <span>BibleSeek</span>
+                                    <span>BibleSeek&nbsp;📖</span>
                                     
 
                                 </div>
@@ -106,21 +110,46 @@
                         <div id="messageFormeight" class="card-body msg_card_body">
                             <!-- Chat messages will be dynamically added here -->
                         </div>
-                    <div class ="card-footer">
-                            <form id="messageArea" class="input-group">
-                                <textarea id="text" name="msg" placeholder="Type your message..." autocomplete="off" class="form-control type_msg" required></textarea>
-                                <div class="input-group-append">
-                                    <button type="submit" id="send" class="input-group-text send_btn">
-                                        <i class="fas fa-location-arrow"></i>
-                                    </button>
-                                </div>
-                            </form>
+                    <!-- Replace your existing message area section with this structure -->
+
+                    <div class="msg_card_body" id="messageContainer">
+                        <!-- Welcome message (add this inside msg_card_body) -->
+                        <div id="welcomeMessage">
+                            <h2><span style="font-size: 1.5em;">👋</span> Hi! I'm BibleSeek</h2>
+                            <p> Ask me anything about the Bible. I can also write you notes!</p>
                         </div>
                         
-                    
-                        
-                        
+                        <!-- Your existing messageFormeight div -->
+                        <div id="messageFormeight">
+                            <!-- Chat messages will be dynamically added here -->
+                        </div>
                     </div>
+                    
+                    <!-- Move the card-footer content into a dynamic container -->
+                    <div id="messageAreaContainer" class="centered">
+                        <form id="messageArea" class="input-group">
+                            <textarea id="text" name="msg" placeholder="What would you like to know about the Bible?" autocomplete="off" class="form-control type_msg"  style="padding-top: 1rem; height: 100px; resize: none;"></textarea>
+                            <div class="input-group-append">
+                                <button type="submit" id="send" class="input-group-text send_btn" style="width:3=50%">
+                                    <i class="fas fa-paper-plane"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+<!-- You can remove or comment out the original card-footer section -->
+<!--
+<div class ="card-footer">
+    <form id="messageArea" class="input-group">
+        <textarea id="text" name="msg" placeholder="Type your message..." autocomplete="off" class="form-control type_msg" required></textarea>
+        <div class="input-group-append">
+            <button type="submit" id="send" class="input-group-text send_btn">
+                <i class="fas fa-location-arrow"></i>
+            </button>
+        </div>
+    </form>
+</div>
+-->
                     
                     
                 </div>
@@ -133,7 +162,7 @@
         </div>
     </div>
     
-    <div id="journal-container" style="display:none; background-color: white; ">
+    <div id="journal-container" style="display:none;">
         <div id="journal-page" contenteditable="true" class="editor"></div>
 
     </div>
@@ -150,7 +179,7 @@
     
   
     <script src="{{ url_for('static', filename='script.js') }}"></script>
-   
+    
     </script>
 
 </body>

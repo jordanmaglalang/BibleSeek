@@ -1,5 +1,11 @@
 // script.js
 $(document).ready(function(){
+    // Dynamic message area state tracking
+    let isFirstMessage = true;
+    let messageAreaContainer = $('#messageAreaContainer');
+    let welcomeMessage = $('#welcomeMessage');
+    let textArea = $('#text');
+
     function convertBibleVersesToLinks(text) {
         var verses=[];
         const verseRegex = /(\d?\s?[A-Za-z]+(?:\s[A-Za-z]+)* \d+:\d+(-\d+)?)/g;
@@ -10,15 +16,56 @@ $(document).ready(function(){
         })
         .replace(/\n/g, "<br>"); 
         
-    
-        
-        
         return full_string
+    }
+    $(document).on("click", "#journal-page a", function(e) {
+        // Prevent default browser behavior inside contenteditable
+        e.preventDefault();
+        window.open($(this).attr("href"), "_blank");
+    });
 
+    // Dynamic message area initialization
+    function initializeDynamicMessageArea() {
+        // Check if there are existing messages
+        if ($("#messageFormeight").children().length > 0) {
+            // If messages exist, keep message area at bottom
+            isFirstMessage = false;
+            if (messageAreaContainer.length) {
+                messageAreaContainer.removeClass('centered');
+            }
+            if (welcomeMessage.length) {
+                welcomeMessage.addClass('hidden');
+            }
+        } else {
+            // If no messages, center the message area
+            isFirstMessage = true;
+            if (messageAreaContainer.length) {
+                messageAreaContainer.addClass('centered');
+            }
+        }
     }
 
-    
-    
+    // Focus effects for dynamic message area
+    textArea.focus(function() {
+        if (messageAreaContainer.length) {
+            messageAreaContainer.addClass('focused');
+        }
+    });
+
+    textArea.blur(function() {
+        if (messageAreaContainer.length) {
+            messageAreaContainer.removeClass('focused');
+        }
+    });
+
+    // Auto-resize textarea
+    textArea.on('input', function() {
+        this.style.height = 'auto';
+        this.style.height = (this.scrollHeight) + 'px';
+    });
+
+    // Initialize dynamic behavior on page load
+    initializeDynamicMessageArea();
 
     $(document).on("click", ".menu-btn", function (e) {
         e.stopPropagation(); // Prevent click from bubbling up
@@ -27,6 +74,7 @@ $(document).ready(function(){
         // Toggle this one
         $(this).siblings(".menu-dropdown").toggle();
     });
+    
     $(document).on("click", function () {
         $(".menu-dropdown").hide();
     });
@@ -45,6 +93,27 @@ $(document).ready(function(){
         
         var rawText = $("#text").val(); // Get user input
         $("#text").val(""); // Clear input field
+        
+        // Reset textarea height
+        textArea.css('height', 'auto');
+        
+        // Handle dynamic message area transition
+        if (isFirstMessage && rawText.trim()) {
+            // Hide welcome message if it exists
+            if (welcomeMessage.length) {
+                welcomeMessage.addClass('hidden');
+            }
+            
+            // Move message area to bottom with smooth transition
+            setTimeout(() => {
+                if (messageAreaContainer.length) {
+                    messageAreaContainer.removeClass('centered');
+                }
+            }, 300);
+            
+            isFirstMessage = false;
+        }
+        
         // Display user message in the chat window
         var userHtml = `
             <div class="d-flex justify-content-end mb-4">
@@ -52,12 +121,12 @@ $(document).ready(function(){
                     ${rawText}
                     <span class="msg_time_send"></span>
                 </div>
-                
             </div>`;
 
         $("#messageFormeight").append(userHtml); // Append user message
         var messageFormeight = $("#messageFormeight")[0];
         messageFormeight.scrollTop = messageFormeight.scrollHeight;
+        
         // Send message to backend via AJAX
         $.ajax({
             data: { msg: rawText }, // Send user input in POST request
@@ -69,7 +138,7 @@ $(document).ready(function(){
                 const alertHtml = `
                     <div class="d-flex justify-content-start mb-4">
                         <div class="msg_cotainer alert-message">
-                            You’ve reached your trial limit. Please <a href="${data.url}" class="alert-link">log in</a> or sign up to continue.
+                            You've reached your trial limit. Please <a href="${data.url}" class="alert-link">log in</a> or sign up to continue.
                         </div>
                     </div>`;
                 $("#messageFormeight").append(alertHtml);
@@ -82,7 +151,6 @@ $(document).ready(function(){
             // Bot message container (empty at first)
             var botHtml = `
                 <div class="d-flex justify-content-start mb-4">
-                    
                     <div class="msg_cotainer typing-effect">
                         <span class="typing-indicator">...</span>
                         <span class="msg_time"></span>
@@ -118,18 +186,9 @@ $(document).ready(function(){
                 }
             }
             
-
             // Start typing effect
             var $typingContainer = $botMessage.find(".msg_cotainer");
             typeText($typingContainer, data.response);
-
-            
-            
-
-
-
-           
-
 
             if (data.notes_history) {
                 console.log('Notes History:', data.notes_history);  // Debugging output
@@ -141,24 +200,14 @@ $(document).ready(function(){
                 $("#notesHistory").val('No additional notes history available.');
             }
         });
-
-
-
-
-      
-
-
-
-
-        
     });
 
     $("#editButton").on("click", function() {
         // Make the notes textarea editable
         $("#notesHistory").prop("readonly", false);
         $("#saveButton").show();  // Show Save button
-                $("#submitButton").show();  // Show Submit button
-                $("#editButton").hide(); 
+        $("#submitButton").show();  // Show Submit button
+        $("#editButton").hide(); 
         $("#saveButton").show();  // Show the save button
     });
 
@@ -193,12 +242,17 @@ $(document).ready(function(){
             data: { notes: updatedNotes },
             success: function(response) {
                 if (response.success && response.updated_notes) {
-                    alert("Notes submitted successfully!");
+                    Swal.fire({
+                        title: '✅ Notes Saved!',
+                        text: 'Your Bible notes were submitted successfully.',
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    });
+
                     $("#notesHistory").val("");  // Clear the notes history
                     
                     // Clear existing notes first
                     var journalContent = $("#journal-content").detach();
-
 
                     journalContent.empty();
                     
@@ -209,17 +263,40 @@ $(document).ready(function(){
                     });
 
                     $("<div style='display:none'></div>").append(journalContent).appendTo("body");
-
                     
                     $("#journal-header").after(journalContent);
                    
-                    
                 } else {
-                    alert("There was an issue submitting the notes.");
+                    Swal.fire({
+                        title: '❌ Error occured',
+                        text: 'Sorry you are unabled to submit notes.',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+
                 }
         },
         error: function(xhr, status, error) {
             console.log("Error:", error);
+
+            let msg = "You must log in or sign up!";
+
+            // Custom message for 401 (not logged in)
+            if (xhr.status === 401) {
+                msg = "You are not logged in. Please log in to submit notes.";
+            }
+
+            Swal.fire({
+                title: '❌ Error',
+                text: msg,
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+                    
+
+
+
+            
         }
         });
     });
@@ -241,13 +318,11 @@ $(document).ready(function(){
         // Create menu button
         var menuBtn = $('<div></div>')
             .addClass('menu-btn')
-            .append($('<i></i>').addClass('fas fa-ellipsis-v'));
+            .append($('<i></i>').addClass('fas fa-trash-alt'));
     
         // Create dropdown menu
         var menuDropdown = $('<div></div>')
-            .addClass('menu-dropdown')
-            .append($('<button></button>').addClass('edit-note').text('Edit'))
-            .append($('<button></button>').addClass('delete-note').text('Delete'));
+            .addClass('menu-dropdown').append($('<button></button>').addClass('delete-note').text('Delete'));
     
         // Assemble the menu
         noteMenu.append(menuBtn).append(menuDropdown);
@@ -257,9 +332,6 @@ $(document).ready(function(){
     
         return noteItem;
     }
-    
-   
-
 
     $("#toggleNotesButton").on("click", function() {
          // Get the current notes content
@@ -281,8 +353,6 @@ $(document).ready(function(){
         });
     });
 
-
-
     $(document).on('click', '.note-item', function() {
         $('.note-item').removeClass('selected');
         // Get the note ID from the 'data-id' attribute
@@ -292,6 +362,7 @@ $(document).ready(function(){
         // Call the scrollToNote function with the note ID
         scrollToNote(noteId);
     });
+    
     $('#bible-button').on('click', function() {
         // Get the note ID from the 'data-id' attribute
         $(".chat").hide()
@@ -311,10 +382,6 @@ $(document).ready(function(){
                 console.log("Error:", error);
             }
         });
-        
-       
-        
-        
     });
 
     function scrollToNote(noteId) {
@@ -327,7 +394,7 @@ $(document).ready(function(){
                 console.log("Fetched note content:", response);  // Debugging log
                 if (response.success) {
                     console.log("Note content:", response.content);
-                    // Assuming 'response.content' is the content you want to display
+                    // Hide chat and show journal
                     $(".chat").hide()
                     $("#bible-container").hide()
                     $("#journal-container").css({
@@ -354,12 +421,9 @@ $(document).ready(function(){
                         'font-size': '16px',
                         'top':'10',
                     });
-                   
-                    
                 } else {
                     alert("Note content not found.");
                 }
-               
             },
             error: function(error) {
                 console.log("Error fetching note:", error);  // Debugging log
@@ -370,12 +434,10 @@ $(document).ready(function(){
 
     $("#editButton_journal").on("click", function() {
         // Make the notes textarea editable
-       
         $("#saveButton_journal").show();  // Show the save button
     });
 
     $("#journal-page").on("input", function(){
-        
         const updatedNotes = $(this)[0].innerHTML; 
         const formattedHTML = convertBibleVersesToLinks(updatedNotes); 
         var noteId = $("#sidebar .note-item.selected").data("id");  // Example: selecting the note from sidebar
@@ -402,32 +464,56 @@ $(document).ready(function(){
             }
         });
     });
+    $(document).on("click", ".delete-note", function () {
+        var noteId = $(this).closest('.note-item').data('id');
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "This note will be permanently deleted.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: "POST",
+                    url: "/delete_note",
+                    data: JSON.stringify({ id: noteId }),
+                    contentType: "application/json",
+                    success: function (response) {
+                        $("div.note-item[data-id='" + noteId + "']").remove();
+                        $("#journal-content").removeClass('collapsed');
+
+
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Deleted!',
+                            text: 'Your note was successfully deleted.',
+                            confirmButtonColor: '#3085d6'
+                        });
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("Error:", error);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops!',
+                            text: 'There was an error deleting the note.',
+                            confirmButtonColor: '#d33'
+                        });
+                    }
+                });
+            } else {
+                console.log("User cancelled deletion.");
+            }
+        });
+    });
+
 
   
     
-
-   $(document).on("click", ".delete-note", function() {
-        var noteId = $(this).closest('.note-item').data('id');
-        if(confirm("Are you sure you want to delete this note?")) {
-            $.ajax({
-                type: "POST",
-                url: "/delete_note",
-                
-                data: JSON.stringify({ id: noteId }),  // Send data as JSON
-                contentType: "application/json",
-                success: function(response) {
-                    $("div.note-item[data-id='" + noteId + "']").remove();
-                    alert("Note deleted successfully!");
-                },
-                error: function(xhr, status, error) {
-                    console.log("Error:", error);
-                    alert("There was an error deleting the note.");
-                }
-            });
-        }else{
-            console.log("Not working")
-        }
-    });
     $("#toggleSidebar").on("click", function () {
         $("#sidebar").toggleClass("sidebar-collapsed");
         if ($('#sidebar').hasClass('sidebar-collapsed')) {
@@ -447,8 +533,6 @@ $(document).ready(function(){
             $('#sidebar #journal-content').show();  // Show journal content
             $('#sidebar h2').show();
         }
-        
-        
     });
 
     $("#notesHistoryHeader").on("click", function () {
@@ -464,6 +548,12 @@ $(document).ready(function(){
     });
 
    $("#journal-header").on("click", function() {
+        const isLoggedIn = $("#user-status").data("logged-in") === "true";
+
+     
+
+
+
         var content = $("#journal-content");
         var arrow = $(this).find("span");
         
@@ -471,9 +561,9 @@ $(document).ready(function(){
         const isCollapsed = content.hasClass("collapsed");
         
         // Only fetch notes if we're expanding the dropdown (arrow will point down)
-        if (isCollapsed) {
-            fetchLatestNotes();
-        }
+        
+        fetchLatestNotes();
+        
         
         // Toggle the collapsed state
         content.toggleClass("collapsed");
@@ -485,8 +575,16 @@ $(document).ready(function(){
             type: "GET",
             url: "/get_latest_notes",
             success: function(response) {
+                if(response.redirect){
+                       
+                        window.location.href = "/login?form=login";
+                        return;
+                }
                 if (response.success) {
                     // Clear existing notes
+                    console.log("fetch LATEST NOTES");
+                  
+                    console.log("go pass the login")
                     $("#journal-content").empty();
                     
                     // Add all notes including any new ones
@@ -497,25 +595,18 @@ $(document).ready(function(){
                 }
             },
             error: function(xhr, status, error) {
+                
                 console.log("Error fetching notes:", error);
             }
         });
     }
 
-
-
-
-
-
-
     $("#bible-header").on("click", function () {
         var content = $("#bible-item");
         var arrow = $(this).find("span");
 
-
         content.toggleClass("collapsed");
         arrow.css("transform", content.hasClass("collapsed") ? "rotate(-90deg)" : "rotate(0deg)");
-        
     });
 
     $("#right-arrow").on("click", function(){
@@ -567,8 +658,38 @@ $(document).ready(function(){
         });
     });
 
+    // Function to reset to center state (for testing or clearing chat)
+    function resetMessageAreaToCenter() {
+        isFirstMessage = true;
+        if (messageAreaContainer.length) {
+            messageAreaContainer.addClass('centered');
+        }
+        if (welcomeMessage.length) {
+            welcomeMessage.removeClass('hidden');
+        }
+        $("#messageFormeight").empty();
+    }
 
+    // Expose reset function globally if needed
+    window.resetMessageAreaToCenter = resetMessageAreaToCenter;
 
+     const placeholders = [
+        "What would you like to know about the Bible?",
+        "Ask a question about a Bible verse...",
+        "Type a topic like 'faith', 'hope', or 'Genesis 1'...",
+        "Curious about Jesus' parables? Ask away!",
+        "Need help understanding a scripture?",
+        "Would you like me to create a devotional for you?"
 
+    ];
+
+    let index = 0;
+
+    setInterval(function () {
+        if ($("#text").val() === "") {
+            $("#text").attr("placeholder", placeholders[index]);
+            index = (index + 1) % placeholders.length;
+        }
+    }, 3000); // Change every 3 seconds
 });
 

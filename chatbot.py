@@ -1,4 +1,6 @@
 from dotenv import load_dotenv
+# Load environment variables
+_ = load_dotenv()
 from langgraph.graph import StateGraph
 from langchain_core.messages import SystemMessage, HumanMessage
 from langchain_openai import ChatOpenAI
@@ -11,15 +13,15 @@ from langchain_core.messages import SystemMessage, HumanMessage
 from langgraph.graph import StateGraph
 
 
-
 langchain.verbose = False
 langchain.debug = False
 langchain.llm_cache = False
 
+
+
 chat_history = []
 notes=[]
-# Load environment variables
-_ = load_dotenv()
+
 
 # Initialize the OpenAI model
 model = ChatOpenAI()
@@ -49,6 +51,7 @@ def initialize_graph(session_data,input):
     builder.add_node("irrelevancy_node", if_irrelevant)
     builder.add_node("relevancy_node", if_relevant)
     builder.add_node("note_node", note_summary)
+   
     # Add conditional edges for decision-making
     builder.add_conditional_edges(
         "user",
@@ -57,6 +60,7 @@ def initialize_graph(session_data,input):
     )
     # Add edges to loop back to user node for further conversation
     builder.add_edge("relevancy_node", "note_node")
+   
     # Set the entry point to "user"
     builder.set_entry_point("user")
 
@@ -230,4 +234,3 @@ def note_summary(state:AgentState):
         print(i)
    
     return state
-
