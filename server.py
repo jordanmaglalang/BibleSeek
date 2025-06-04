@@ -79,7 +79,7 @@ def log_out():
 
 
 
-@app.route("/versify_front")
+@app.route("/main")
 def versify_front():
     
     # Route for the main content page after successful login or signup
